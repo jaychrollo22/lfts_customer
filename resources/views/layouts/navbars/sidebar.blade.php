@@ -1,7 +1,7 @@
 <div class="sidebar" data="primary">
     <div class="sidebar-wrapper">
         <div class="logo">
-            <a href="#" class="simple-text logo-normal">Lafil Tracking System</a>
+            <a href="#" class="simple-text logo-normal">LaFil Express Tracking</a>
         </div>
         <ul class="nav">
             <li>

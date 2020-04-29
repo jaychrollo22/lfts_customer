@@ -22,7 +22,7 @@
                                     <h1 class="card-title">Sign in</h1>
                                 </div>
                                 <div class="card-body">
-                                    <h4 class="text-default text-center">Welcome to LAFIL Tracking System</h4>
+                                    <h4 class="text-default text-center">Welcome to LaFil Express Tracking</h4>
                                     <p class="text-dark mb-2">Username</p>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
