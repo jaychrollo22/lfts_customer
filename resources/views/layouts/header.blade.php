@@ -4,7 +4,9 @@
 <!-- CSRF Token -->
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
-<title>LAFIL TRACKING SYSTEM</title>
+<title>LaFil Express Tracking</title>
+
+<link href="{{ asset('/img/lfuggoc_icon.png') }}" rel="icon" type="image/png">
 
 <!-- Fonts -->
 <link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,600,700,800" rel="stylesheet" />
