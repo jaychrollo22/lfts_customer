@@ -22,6 +22,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/track-shipment-details', 'HomeController@shipmentDetail');
 
 Route::get('/track-shipment-detail-log-data/{shipment_number}' , 'HomeController@getShipmentDetailLogs');
+Route::post('/track-shipment-details-filter' , 'HomeController@shipmentDetailFilter');
 
 Route::get('/change_password','HomeController@change_password')->name('change_password');
 Route::post('/change-password','HomeController@changePassword');

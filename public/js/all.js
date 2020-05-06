@@ -2143,6 +2143,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2156,13 +2161,41 @@ __webpack_require__.r(__webpack_exports__);
       shipmentLocationTimer: '',
       fetchshipmentTimer: '',
       errors: [],
-      shipment_logs_loading: false
+      shipment_logs_loading: false,
+      from: '',
+      to: ''
     };
   },
   created: function created() {
     this.fetchShipmentDetails();
   },
   methods: {
+    fetchFilter: function fetchFilter() {
+      var _this = this;
+
+      var v = this;
+      v.shipments = [];
+      v.loading = true;
+      this.errors = [];
+      axios.post('/track-shipment-details-filter', {
+        from: v.from,
+        to: v.to,
+        _method: 'POST'
+      }).then(function (response) {
+        v.shipments = response.data;
+        v.loading = false;
+      })["catch"](function (error) {
+        _this.errors = error.response.data.errors;
+        v.loading = false;
+      });
+    },
+    checkMap: function checkMap(origin, destination) {
+      if (origin == '0,0' || destination == '0,0') {
+        alert('No coordinates found!');
+      } else {
+        window.open('https://www.google.com/maps/dir/' + origin + '/' + destination, '_blank');
+      }
+    },
     fetchShipmentDetails: function fetchShipmentDetails() {
       var v = this;
       v.shipments = [];
@@ -2171,6 +2204,7 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     fetchShipmentLogs: function fetchShipmentLogs(shipment_number) {
+      $('#shipmentLogsModal').modal('show');
       var v = this;
       v.shipment_detail_logs = [];
       v.shipment_logs_loading = true;
@@ -2194,11 +2228,11 @@ __webpack_require__.r(__webpack_exports__);
   },
   computed: {
     filteredShipments: function filteredShipments() {
-      var _this = this;
+      var _this2 = this;
 
       var self = this;
       return Object.values(self.shipments).filter(function (shipment_data) {
-        return shipment_data.shipment_number.toLowerCase().includes(_this.keywords.toLowerCase());
+        return shipment_data.shipment_number.toLowerCase().includes(_this2.keywords.toLowerCase()) || shipment_data.do_number.toLowerCase().includes(_this2.keywords.toLowerCase());
       });
     },
     totalPages: function totalPages() {
@@ -6816,7 +6850,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/* .main-panel>.content {\n    padding: 78px 30px 30px 30px!important;\n    min-height: calc(100vh - 70px)!important;\n} */\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/* .main-panel>.content {\n    padding: 78px 30px 30px 30px!important;\n    min-height: calc(100vh - 70px)!important;\n} */\n", ""]);
 
 // exports
 
@@ -43720,345 +43754,434 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _c("div", { staticClass: "container-fluid" }, [
-      _c("div", { staticClass: "row" }, [
-        _c("div", { staticClass: "col-xl-4 order-xl-2 mb-5 mb-xl-0" }, [
-          _c("div", { staticClass: "card bg-secondary shadow  mb-5" }, [
+    _c("div", { staticClass: "col-md-12" }, [
+      _c("div", { staticClass: "card " }, [
+        _c("div", { staticClass: "card-header" }, [
+          _c("div", { staticClass: "row" }, [
             _vm._m(0),
             _vm._v(" "),
-            _c("div", { staticClass: "card-body" }, [
-              _c("div", { staticClass: "table-responsive" }, [
-                _c(
-                  "table",
-                  { staticClass: "table align-items-center table-flush" },
-                  [
-                    _c(
-                      "tbody",
-                      _vm._l(_vm.shipment_detail_logs, function(log, index) {
-                        return _c("tr", { key: index }, [
-                          log.log_date_time != "12:04:00 AM -0001-11-30"
-                            ? _c("td", { staticClass: "text-center" }, [
-                                _c(
-                                  "p",
-                                  {
-                                    staticClass: "text-muted",
-                                    staticStyle: { "font-size": "12px" }
-                                  },
-                                  [_vm._v(_vm._s(log.log_date_time))]
-                                )
-                              ])
-                            : _vm._e(),
-                          _vm._v(" "),
-                          log.log_date_time != "12:04:00 AM -0001-11-30"
-                            ? _c("td", { staticClass: "text-left" }, [
-                                _c(
-                                  "p",
-                                  {
-                                    staticClass: "title",
-                                    staticStyle: { "font-size": "14px" }
-                                  },
-                                  [_vm._v(_vm._s(log.action))]
-                                )
-                              ])
-                            : _vm._e()
-                        ])
-                      }),
-                      0
-                    )
-                  ]
-                )
+            _c("div", { staticClass: "col-5" }, [
+              _c("div", { staticClass: "form-group" }, [
+                _c("label", [_vm._v("Search")]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.keywords,
+                      expression: "keywords"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  attrs: {
+                    type: "text",
+                    placeholder:
+                      "Input Shipment Number / DO Number / Plate Number"
+                  },
+                  domProps: { value: _vm.keywords },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.keywords = $event.target.value
+                    }
+                  }
+                })
               ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-2" }, [
+              _c("div", { staticClass: "form-group" }, [
+                _c("label", [_vm._v("From")]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.from,
+                      expression: "from"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  attrs: { type: "date", placeholder: "Input Search" },
+                  domProps: { value: _vm.from },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.from = $event.target.value
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _vm.errors.from
+                  ? _c("span", { staticClass: "text-danger" }, [
+                      _vm._v(" " + _vm._s(_vm.errors.from[0]) + " ")
+                    ])
+                  : _vm._e()
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-2" }, [
+              _c("div", { staticClass: "form-group" }, [
+                _c("label", [_vm._v("To")]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.to,
+                      expression: "to"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  attrs: { type: "date", placeholder: "Input Search" },
+                  domProps: { value: _vm.to },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.to = $event.target.value
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _vm.errors.to
+                  ? _c("span", { staticClass: "text-danger" }, [
+                      _vm._v(" " + _vm._s(_vm.errors.to[0]) + " ")
+                    ])
+                  : _vm._e()
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-2" }, [
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-sm btn-primary",
+                  on: { click: _vm.fetchFilter }
+                },
+                [_vm._v("Filter")]
+              )
             ])
           ])
         ]),
         _vm._v(" "),
-        _c("div", { staticClass: "col-xl-8 order-xl-1" }, [
-          _c("div", { staticClass: "card bg-secondary shadow  mb-5" }, [
-            _c("div", { staticClass: "card-header bg-white border-0" }, [
-              _vm._m(1),
-              _vm._v(" "),
-              _c("div", { staticClass: "col-xl-12 mb-2 mt-3 float-right" }, [
-                _c("div", { staticClass: "col-xl-6 mb-2 mt-3 float-left" }, [
-                  _c("label", { attrs: { for: "shipment_number" } }, [
-                    _vm._v("Search")
-                  ]),
-                  _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.keywords,
-                        expression: "keywords"
-                      }
-                    ],
-                    staticClass: "form-control",
-                    attrs: {
-                      type: "text",
-                      name: "shipment_number",
-                      placeholder: "Search by Shipment Number",
-                      autocomplete: "off",
-                      id: "shipment_number"
-                    },
-                    domProps: { value: _vm.keywords },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.keywords = $event.target.value
-                      }
-                    }
-                  })
-                ])
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "card-body" }, [
-              _c("div", { staticClass: "table-responsive" }, [
+        _c("div", { staticClass: "card-body" }, [
+          _c("div", { staticClass: "table-responsive" }, [
+            _c(
+              "table",
+              { staticClass: "table align-items-center table-flush" },
+              [
+                _vm._m(1),
+                _vm._v(" "),
                 _c(
-                  "table",
-                  { staticClass: "table align-items-center table-flush" },
-                  [
-                    _vm._m(2),
-                    _vm._v(" "),
-                    _c(
-                      "tbody",
-                      _vm._l(_vm.filteredQueues, function(shipment, index) {
-                        return _c("tr", { key: index }, [
-                          _c("td", [_vm._v(_vm._s(index + 1))]),
-                          _vm._v(" "),
-                          _c("td", [_vm._v(_vm._s(shipment.change_date))]),
-                          _vm._v(" "),
-                          _c("td", [
-                            _c("p", [
-                              _vm._v("Shipment Number: "),
-                              _c("span", { staticClass: "text-info" }, [
-                                _vm._v(_vm._s(shipment.shipment_number))
-                              ])
-                            ]),
-                            _vm._v(" "),
-                            _c("p", [
-                              _vm._v("DO Number: "),
-                              _c("span", { staticClass: "text-success" }, [
-                                _vm._v(_vm._s(shipment.do_number))
-                              ])
-                            ]),
-                            _vm._v(" "),
-                            _c("p", [
-                              _vm._v(
-                                "Customer Code: " +
-                                  _vm._s(shipment.customer_code)
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c("p", [
-                              _vm._v(
-                                "Customer Name: " +
-                                  _vm._s(shipment.customer_name)
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c("p", [
-                              _vm._v(
-                                "Customer Address: " +
-                                  _vm._s(shipment.delivery_address)
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c("p", [
-                              shipment.status == "In Transit"
-                                ? _c(
-                                    "button",
-                                    {
-                                      staticClass:
-                                        "btn btn-sm btn-warning mt-1",
-                                      on: {
-                                        click: function($event) {
-                                          return _vm.fetchShipmentLogs(
-                                            shipment.shipment_number
-                                          )
-                                        }
-                                      }
-                                    },
-                                    [_vm._v(_vm._s(shipment.status))]
-                                  )
-                                : shipment.status == "Reach Destination"
-                                ? _c(
-                                    "button",
-                                    {
-                                      staticClass:
-                                        "btn btn-sm btn-success mt-1",
-                                      on: {
-                                        click: function($event) {
-                                          return _vm.fetchShipmentLogs(
-                                            shipment.shipment_number
-                                          )
-                                        }
-                                      }
-                                    },
-                                    [_vm._v(_vm._s(shipment.status))]
-                                  )
-                                : shipment.status == "Delivered"
-                                ? _c(
-                                    "button",
-                                    {
-                                      staticClass:
-                                        "btn btn-sm btn-primary mt-1",
-                                      on: {
-                                        click: function($event) {
-                                          return _vm.fetchShipmentLogs(
-                                            shipment.shipment_number
-                                          )
-                                        }
-                                      }
-                                    },
-                                    [_vm._v(_vm._s(shipment.status))]
-                                  )
-                                : shipment.status == "In Plant"
-                                ? _c(
-                                    "button",
-                                    {
-                                      staticClass: "btn btn-sm btn-info mt-1",
-                                      on: {
-                                        click: function($event) {
-                                          return _vm.fetchShipmentLogs(
-                                            shipment.shipment_number
-                                          )
-                                        }
-                                      }
-                                    },
-                                    [_vm._v(_vm._s(shipment.status))]
-                                  )
-                                : _c(
-                                    "button",
-                                    {
-                                      staticClass:
-                                        "btn btn-sm btn-warning mt-1",
-                                      attrs: { disabled: "" }
-                                    },
-                                    [_vm._v("No Status")]
-                                  )
-                            ])
-                          ]),
-                          _vm._v(" "),
-                          _c("td", { staticClass: "text-center" }, [
-                            _c("strong", { staticClass: "text-default" }, [
-                              _vm._v(_vm._s(shipment.plate_number))
-                            ])
-                          ]),
-                          _vm._v(" "),
-                          _c("td", { staticClass: "text-center" }, [
-                            shipment.status == "In Transit"
-                              ? _c("strong", { staticClass: "text-default" }, [
-                                  _vm._v(_vm._s(shipment.distance_text))
-                                ])
-                              : shipment.status == "In Plant"
-                              ? _c("strong", { staticClass: "text-default" }, [
-                                  _vm._v(_vm._s(shipment.distance_text))
-                                ])
-                              : shipment.status == "Reach Destination"
-                              ? _c("strong", { staticClass: "text-default" }, [
-                                  _vm._v("Reach Destination")
-                                ])
-                              : shipment.status == "Delivered"
-                              ? _c("strong", { staticClass: "text-default" }, [
-                                  _vm._v("Delivered")
-                                ])
-                              : _c("strong", { staticClass: "text-default" })
-                          ]),
-                          _vm._v(" "),
-                          _c("td", { staticClass: "text-center" }, [
-                            shipment.status == "In Transit"
-                              ? _c("strong", { staticClass: "text-default" }, [
-                                  _vm._v(_vm._s(shipment.estimated_time_travel))
-                                ])
-                              : shipment.status == "In Plant"
-                              ? _c("strong", { staticClass: "text-default" }, [
-                                  _vm._v(_vm._s(shipment.estimated_time_travel))
-                                ])
-                              : shipment.status == "Reach Destination"
-                              ? _c("strong", { staticClass: "text-default" }, [
-                                  _vm._v("Reach Destination")
-                                ])
-                              : shipment.status == "Delivered"
-                              ? _c("strong", { staticClass: "text-default" }, [
-                                  _vm._v("Delivered")
-                                ])
-                              : _c("strong", { staticClass: "text-default" })
+                  "tbody",
+                  _vm._l(_vm.filteredQueues, function(shipment, index) {
+                    return _c("tr", { key: index }, [
+                      _c("td", [_vm._v(_vm._s(index + 1))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(shipment.change_date))]),
+                      _vm._v(" "),
+                      _c("td", [
+                        _c("p", [
+                          _vm._v("DO Number: "),
+                          _c("strong", { staticClass: "text-default" }, [
+                            _vm._v(_vm._s(shipment.do_number))
                           ])
+                        ]),
+                        _vm._v(" "),
+                        _c("p", [
+                          _vm._v(
+                            "Customer Name: " + _vm._s(shipment.customer_name)
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("p", [
+                          _vm._v(
+                            "Customer Address: " +
+                              _vm._s(shipment.delivery_address)
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("p", [
+                          shipment.status == "In Transit"
+                            ? _c(
+                                "button",
+                                {
+                                  staticClass: "btn btn-sm btn-warning mt-1",
+                                  on: {
+                                    click: function($event) {
+                                      return _vm.fetchShipmentLogs(
+                                        shipment.shipment_number
+                                      )
+                                    }
+                                  }
+                                },
+                                [_vm._v(_vm._s(shipment.status))]
+                              )
+                            : shipment.status == "Reach Destination"
+                            ? _c(
+                                "button",
+                                {
+                                  staticClass: "btn btn-sm btn-success mt-1",
+                                  on: {
+                                    click: function($event) {
+                                      return _vm.fetchShipmentLogs(
+                                        shipment.shipment_number
+                                      )
+                                    }
+                                  }
+                                },
+                                [_vm._v(_vm._s(shipment.status))]
+                              )
+                            : shipment.status == "Delivered"
+                            ? _c(
+                                "button",
+                                {
+                                  staticClass: "btn btn-sm btn-primary mt-1",
+                                  on: {
+                                    click: function($event) {
+                                      return _vm.fetchShipmentLogs(
+                                        shipment.shipment_number
+                                      )
+                                    }
+                                  }
+                                },
+                                [_vm._v(_vm._s(shipment.status))]
+                              )
+                            : shipment.status == "In Plant"
+                            ? _c(
+                                "button",
+                                {
+                                  staticClass: "btn btn-sm btn-info mt-1",
+                                  on: {
+                                    click: function($event) {
+                                      return _vm.fetchShipmentLogs(
+                                        shipment.shipment_number
+                                      )
+                                    }
+                                  }
+                                },
+                                [_vm._v(_vm._s(shipment.status))]
+                              )
+                            : _c(
+                                "button",
+                                {
+                                  staticClass: "btn btn-sm btn-warning mt-1",
+                                  attrs: { disabled: "" }
+                                },
+                                [_vm._v("No Status")]
+                              ),
+                          _vm._v(" "),
+                          shipment.status == "In Transit"
+                            ? _c(
+                                "button",
+                                {
+                                  staticClass: "btn btn-sm btn-default mt-1",
+                                  on: {
+                                    click: function($event) {
+                                      return _vm.checkMap(
+                                        shipment.shipment_current_coordinates,
+                                        shipment.shipment_delivery_coordinates
+                                      )
+                                    }
+                                  }
+                                },
+                                [_vm._v("Check Google Map")]
+                              )
+                            : _vm._e(),
+                          _vm._v(" "),
+                          shipment.status == "Reach Destination"
+                            ? _c(
+                                "button",
+                                {
+                                  staticClass: "btn btn-sm btn-default mt-1",
+                                  on: {
+                                    click: function($event) {
+                                      return _vm.checkMap(
+                                        shipment.shipment_current_coordinates,
+                                        shipment.shipment_delivery_coordinates
+                                      )
+                                    }
+                                  }
+                                },
+                                [_vm._v("Check Google Map")]
+                              )
+                            : _vm._e()
                         ])
-                      }),
-                      0
-                    )
-                  ]
-                )
-              ]),
-              _vm._v(" "),
-              _vm.filteredQueues.length
-                ? _c("div", { staticClass: "row mb-3 mt-3 ml-1" }, [
-                    _c("div", { staticClass: "col-6" }, [
-                      _c(
-                        "button",
-                        {
-                          staticClass: "btn btn-default btn-sm btn-fill",
-                          attrs: { disabled: !_vm.showPreviousLink() },
-                          on: {
-                            click: function($event) {
-                              return _vm.setPage(_vm.currentPage - 1)
-                            }
-                          }
-                        },
-                        [_vm._v(" Previous ")]
-                      ),
-                      _vm._v(" "),
-                      _c("span", { staticClass: "text-dark" }, [
-                        _vm._v(
-                          "Page " +
-                            _vm._s(_vm.currentPage + 1) +
-                            " of " +
-                            _vm._s(_vm.totalPages)
-                        )
                       ]),
                       _vm._v(" "),
-                      _c(
-                        "button",
-                        {
-                          staticClass: "btn btn-default btn-sm btn-fill",
-                          attrs: { disabled: !_vm.showNextLink() },
-                          on: {
-                            click: function($event) {
-                              return _vm.setPage(_vm.currentPage + 1)
-                            }
-                          }
-                        },
-                        [_vm._v(" Next ")]
-                      )
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "col-6 text-right" }, [
-                      _c("span", { staticClass: "mr-2" }, [
-                        _vm._v(
-                          "Filtered Shipment(s) : " +
-                            _vm._s(_vm.filteredQueues.length) +
-                            " "
-                        )
-                      ]),
-                      _c("br"),
-                      _vm._v(" "),
-                      _c("span", { staticClass: "mr-2" }, [
-                        _vm._v(
-                          "Total Shipment(s) : " + _vm._s(_vm.shipments.length)
-                        )
+                      _c("td", { staticClass: "text-left" }, [
+                        _c("strong", { staticClass: "text-default" }, [
+                          _vm._v(_vm._s(shipment.plate_number))
+                        ]),
+                        _vm._v(" "),
+                        _c("p", [
+                          _vm._v("Driver: " + _vm._s(shipment.driver_name))
+                        ]),
+                        _vm._v(" "),
+                        _c("p", [
+                          _vm._v(
+                            "Phone No.: " + _vm._s(shipment.driver_phone_number)
+                          )
+                        ])
                       ])
                     ])
+                  }),
+                  0
+                )
+              ]
+            )
+          ]),
+          _vm._v(" "),
+          _vm.filteredQueues.length
+            ? _c("div", { staticClass: "row mb-3 mt-3 ml-1" }, [
+                _c("div", { staticClass: "col-6" }, [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-default btn-sm btn-fill",
+                      attrs: { disabled: !_vm.showPreviousLink() },
+                      on: {
+                        click: function($event) {
+                          return _vm.setPage(_vm.currentPage - 1)
+                        }
+                      }
+                    },
+                    [_vm._v(" Previous ")]
+                  ),
+                  _vm._v(" "),
+                  _c("span", { staticClass: "text-dark" }, [
+                    _vm._v(
+                      "Page " +
+                        _vm._s(_vm.currentPage + 1) +
+                        " of " +
+                        _vm._s(_vm.totalPages)
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-default btn-sm btn-fill",
+                      attrs: { disabled: !_vm.showNextLink() },
+                      on: {
+                        click: function($event) {
+                          return _vm.setPage(_vm.currentPage + 1)
+                        }
+                      }
+                    },
+                    [_vm._v(" Next ")]
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-6 text-right" }, [
+                  _c("span", { staticClass: "mr-2" }, [
+                    _vm._v(
+                      "Filtered Shipment(s) : " +
+                        _vm._s(_vm.filteredQueues.length) +
+                        " "
+                    )
+                  ]),
+                  _c("br"),
+                  _vm._v(" "),
+                  _c("span", { staticClass: "mr-2" }, [
+                    _vm._v(
+                      "Total Shipment(s) : " + _vm._s(_vm.shipments.length)
+                    )
                   ])
-                : _vm._e()
-            ])
-          ])
+                ])
+              ])
+            : _vm._e()
         ])
       ])
-    ])
+    ]),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "modal fade",
+        attrs: {
+          id: "shipmentLogsModal",
+          tabindex: "-1",
+          role: "dialog",
+          "aria-labelledby": "exampleModalLabel",
+          "aria-hidden": "true",
+          "data-backdrop": "false"
+        }
+      },
+      [
+        _c(
+          "div",
+          { staticClass: "modal-dialog modal-lg", attrs: { role: "document" } },
+          [
+            _c("div", { staticClass: "modal-content" }, [
+              _vm._m(2),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "modal-body", staticStyle: { width: "100%" } },
+                [
+                  _c("div", { staticClass: "table-responsive" }, [
+                    _c(
+                      "table",
+                      { staticClass: "table align-items-center table-flush" },
+                      [
+                        _c(
+                          "tbody",
+                          _vm._l(_vm.shipment_detail_logs, function(
+                            log,
+                            index
+                          ) {
+                            return _c("tr", { key: index }, [
+                              log.log_date_time != "12:04:00 AM -0001-11-30"
+                                ? _c("td", { staticClass: "text-center" }, [
+                                    _c(
+                                      "p",
+                                      {
+                                        staticClass: "text-muted",
+                                        staticStyle: { "font-size": "12px" }
+                                      },
+                                      [_vm._v(_vm._s(log.log_date_time))]
+                                    )
+                                  ])
+                                : _vm._e(),
+                              _vm._v(" "),
+                              log.log_date_time != "12:04:00 AM -0001-11-30"
+                                ? _c("td", { staticClass: "text-left" }, [
+                                    _c(
+                                      "p",
+                                      {
+                                        staticClass: "title",
+                                        staticStyle: { "font-size": "14px" }
+                                      },
+                                      [_vm._v(_vm._s(log.action))]
+                                    )
+                                  ])
+                                : _vm._e()
+                            ])
+                          }),
+                          0
+                        )
+                      ]
+                    )
+                  ])
+                ]
+              ),
+              _vm._v(" "),
+              _vm._m(3)
+            ])
+          ]
+        )
+      ]
+    )
   ])
 }
 var staticRenderFns = [
@@ -44066,25 +44189,10 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "card-header bg-white border-0" }, [
-      _c("div", { staticClass: "row align-items-center" }, [
-        _c("div", { staticClass: "col-8" }, [
-          _c("h3", { staticClass: "mb-0 text-uppercase" }, [
-            _vm._v("Shipment Logs")
-          ])
-        ])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "row align-items-center" }, [
-      _c("div", { staticClass: "col-8" }, [
-        _c("h3", { staticClass: "mb-0 text-uppercase" }, [
-          _vm._v("Track Shipments")
-        ])
+    return _c("div", { staticClass: "col-12" }, [
+      _c("h3", { staticClass: "card-title" }, [
+        _c("i", { staticClass: "tim-icons icon-delivery-fast" }),
+        _vm._v(" Track Shipment")
       ])
     ])
   },
@@ -44100,12 +44208,48 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", { attrs: { scope: "col" } }, [_vm._v("Shipment Details")]),
         _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Plate Number")]),
-        _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Distance")]),
-        _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("ETA")])
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Truck")])
       ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-header" }, [
+      _c(
+        "h5",
+        { staticClass: "modal-title", attrs: { id: "exampleModalLabel" } },
+        [_vm._v("Shipment Logs")]
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass: "close",
+          attrs: {
+            type: "button",
+            "data-dismiss": "modal",
+            "aria-label": "Close"
+          }
+        },
+        [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-footer" }, [
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-secondary",
+          attrs: { type: "button", "data-dismiss": "modal" }
+        },
+        [_vm._v("Close")]
+      )
     ])
   }
 ]

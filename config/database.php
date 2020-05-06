@@ -91,6 +91,18 @@ return [
             'prefix_indexes' => true,
         ],
 
+        'sqlsrv_lts' => [
+            'driver' => 'sqlsrv',
+            'host' => env('DB_LTS_HOST', 'localhost'),
+            'port' => env('DB_LTS_PORT', '1433'),
+            'database' => env('DB_LTS_DATABASE', 'forge'),
+            'username' => env('DB_LTS_USERNAME', 'forge'),
+            'password' => env('DB_LTS_PASSWORD', ''),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'pooling'  => false,
+        ],
+
         'sqlsrv' => [
             'driver' => 'sqlsrv',
             'url' => env('DATABASE_URL'),
