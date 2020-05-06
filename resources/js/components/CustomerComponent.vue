@@ -10,7 +10,7 @@
                         <div class="col-5">
                             <div class="form-group">
                                 <label>Search</label>
-                                <input type="text" class="form-control"  v-model="keywords" placeholder="Input Shipment Number / DO Number / Plate Number" />
+                                <input type="text" class="form-control"  v-model="keywords" placeholder="Input DO Number" />
                             </div>
                         </div>
                    

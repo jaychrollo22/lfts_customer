@@ -43774,11 +43774,7 @@ var render = function() {
                     }
                   ],
                   staticClass: "form-control",
-                  attrs: {
-                    type: "text",
-                    placeholder:
-                      "Input Shipment Number / DO Number / Plate Number"
-                  },
+                  attrs: { type: "text", placeholder: "Input DO Number" },
                   domProps: { value: _vm.keywords },
                   on: {
                     input: function($event) {
