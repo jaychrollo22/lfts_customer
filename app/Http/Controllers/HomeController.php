@@ -39,7 +39,7 @@ class HomeController extends Controller
     public function shipmentDetail(){
         $email = Auth::user()->email;
         
-        $shipment_details = CustomerShipmentDetail::where('emal', $email)->orderBy('change_date' , 'DESC')->get();
+        $shipment_details = CustomerShipmentDetail::where('email', $email)->whereDate('change_date', date('Y-m-d'))->orderBy('change_date' , 'DESC')->get();
         
         if($shipment_details){
             foreach($shipment_details as $k => $log){
