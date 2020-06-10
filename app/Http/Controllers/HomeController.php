@@ -68,7 +68,7 @@ class HomeController extends Controller
         return $logs;
     }
     public function shipmentDetailFilter(Request $request){
-        $email = auth()->user()->email;
+        $email = Auth::user()->email;
 
         $request->validate([
             'from' => 'required',
