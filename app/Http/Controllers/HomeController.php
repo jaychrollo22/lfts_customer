@@ -37,7 +37,7 @@ class HomeController extends Controller
     }
 
     public function shipmentDetail(){
-        $customer_code = auth()->user()->email;
+        $email = Auth::user()->email;
         
         $shipment_details = CustomerShipmentDetail::where('emal', $email)->orderBy('change_date' , 'DESC')->get();
         
