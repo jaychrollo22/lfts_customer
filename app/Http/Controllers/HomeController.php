@@ -10,6 +10,8 @@ use App\CustomerShipmentDetailLog;
 use App\User;
 use App\Driver;
 
+use Auth;
+
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -35,9 +37,9 @@ class HomeController extends Controller
     }
 
     public function shipmentDetail(){
-        $customer_code = auth()->user()->customer_code;
+        $customer_code = auth()->user()->email;
         
-        $shipment_details = CustomerShipmentDetail::where('customer_code', $customer_code)->orderBy('change_date' , 'DESC')->get();
+        $shipment_details = CustomerShipmentDetail::where('emal', $email)->orderBy('change_date' , 'DESC')->get();
         
         if($shipment_details){
             foreach($shipment_details as $k => $log){
@@ -66,7 +68,7 @@ class HomeController extends Controller
         return $logs;
     }
     public function shipmentDetailFilter(Request $request){
-        $customer_code = auth()->user()->customer_code;
+        $email = auth()->user()->email;
 
         $request->validate([
             'from' => 'required',
@@ -76,7 +78,7 @@ class HomeController extends Controller
         $from = $request->from ? $request->from : ""; 
         $to = $request->to ? $request->to : "";
     
-        $shipment_details = CustomerShipmentDetail::where('customer_code', $customer_code)
+        $shipment_details = CustomerShipmentDetail::where('email', $email)
                                             ->where('change_date', '>=',  $from)
                                             ->whereDate('change_date' ,'<=', $to)
                                             ->orderBy('change_date','DESC')->get();
