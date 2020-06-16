@@ -61,6 +61,8 @@
 
                                             <button class="btn btn-sm btn-default mt-1" v-if="shipment.status =='In Transit'" @click="checkMap(shipment.shipment_current_coordinates,shipment.shipment_delivery_coordinates)">Check Google Map</button>
                                             <button class="btn btn-sm btn-default mt-1" v-if="shipment.status =='Reach Destination'" @click="checkMap(shipment.shipment_current_coordinates,shipment.shipment_delivery_coordinates)">Check Google Map</button>
+
+                                            <button class="btn btn-sm btn-danger mt-1" @click="fetchDoDetails(shipment)">Delivery Items</button>
                                         </p>
                                     </td>
                                     <td class="text-left">
@@ -119,6 +121,51 @@
             </div>
         </div>
 
+        <div class="modal fade" id="doDetailsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="false">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Delivery Items</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" style="width:100%;">
+                        <div class="table-responsive">
+                            <table class="table align-items-center table-flush">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Quantity</th>
+                                    <th scope="col">Unit</th>
+                                    <th scope="col">Net Weight</th>
+                                    <th scope="col">Item Description</th>
+                                </tr>
+                            </thead>
+                            <tbody  v-if="do_details">
+                                <tr v-for="(detail, index) in do_details" v-bind:key="index">
+                                    <td>{{index + 1}}</td>
+                                    <td>{{ detail.qty }}</td>
+                                    <td>{{ detail.sales_unit }}</td>
+                                    <td>{{ detail.net_weight }}</td>
+                                    <td>{{ detail.material_description }}</td>
+                                </tr>
+                            </tbody>
+                            <tbody v-else>
+                                <tr>
+                                    <td colspan="5">Not available</td>
+                                </tr>
+                            </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </template>
 
@@ -138,13 +185,31 @@
                 errors:[],
                 shipment_logs_loading : false,
                 from : '',
-                to : ''
+                to : '',
+                do_details : []
             }
         },
         created(){
             this.fetchShipmentDetails();
         },
         methods:{
+            fetchDoDetails(shipment){
+                $('#doDetailsModal').modal('show');
+                let v = this;
+                v.do_details = [];
+                axios.post('/customer_do_details',{
+                    do_number:shipment.do_number,
+                    customer_code:shipment.customer_code,
+                    shipment_number:shipment.shipment_number,
+                     _method: 'POST'
+                })
+                .then(response => {
+                    v.do_details = response.data;
+                })
+                .catch(error => {
+                    this.errors = error.response.data.errors;
+                });
+            },
             fetchFilter(){
                 let v= this;
                 v.shipments = [];
@@ -208,7 +273,8 @@
             filteredShipments(){
                 let self = this;
                 return Object.values(self.shipments).filter(shipment_data => {
-                    return shipment_data.shipment_number.toLowerCase().includes(this.keywords.toLowerCase()) || shipment_data.do_number.toLowerCase().includes(this.keywords.toLowerCase())
+                    // return shipment_data.shipment_number.toLowerCase().includes(this.keywords.toLowerCase()) || shipment_data.do_number.toLowerCase().includes(this.keywords.toLowerCase())
+                    return shipment_data
                 });
             },
             totalPages() {

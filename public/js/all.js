@@ -2148,6 +2148,53 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2163,15 +2210,33 @@ __webpack_require__.r(__webpack_exports__);
       errors: [],
       shipment_logs_loading: false,
       from: '',
-      to: ''
+      to: '',
+      do_details: []
     };
   },
   created: function created() {
     this.fetchShipmentDetails();
   },
   methods: {
-    fetchFilter: function fetchFilter() {
+    fetchDoDetails: function fetchDoDetails(shipment) {
       var _this = this;
+
+      $('#doDetailsModal').modal('show');
+      var v = this;
+      v.do_details = [];
+      axios.post('/customer_do_details', {
+        do_number: shipment.do_number,
+        customer_code: shipment.customer_code,
+        shipment_number: shipment.shipment_number,
+        _method: 'POST'
+      }).then(function (response) {
+        v.do_details = response.data;
+      })["catch"](function (error) {
+        _this.errors = error.response.data.errors;
+      });
+    },
+    fetchFilter: function fetchFilter() {
+      var _this2 = this;
 
       var v = this;
       v.shipments = [];
@@ -2185,7 +2250,7 @@ __webpack_require__.r(__webpack_exports__);
         v.shipments = response.data;
         v.loading = false;
       })["catch"](function (error) {
-        _this.errors = error.response.data.errors;
+        _this2.errors = error.response.data.errors;
         v.loading = false;
       });
     },
@@ -2228,11 +2293,10 @@ __webpack_require__.r(__webpack_exports__);
   },
   computed: {
     filteredShipments: function filteredShipments() {
-      var _this2 = this;
-
       var self = this;
       return Object.values(self.shipments).filter(function (shipment_data) {
-        return shipment_data.shipment_number.toLowerCase().includes(_this2.keywords.toLowerCase()) || shipment_data.do_number.toLowerCase().includes(_this2.keywords.toLowerCase());
+        // return shipment_data.shipment_number.toLowerCase().includes(this.keywords.toLowerCase()) || shipment_data.do_number.toLowerCase().includes(this.keywords.toLowerCase())
+        return shipment_data;
       });
     },
     totalPages: function totalPages() {
@@ -6850,7 +6914,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/* .main-panel>.content {\n    padding: 78px 30px 30px 30px!important;\n    min-height: calc(100vh - 70px)!important;\n} */\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/* .main-panel>.content {\n    padding: 78px 30px 30px 30px!important;\n    min-height: calc(100vh - 70px)!important;\n} */\n", ""]);
 
 // exports
 
@@ -44010,7 +44074,20 @@ var render = function() {
                                 },
                                 [_vm._v("Check Google Map")]
                               )
-                            : _vm._e()
+                            : _vm._e(),
+                          _vm._v(" "),
+                          _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-sm btn-danger mt-1",
+                              on: {
+                                click: function($event) {
+                                  return _vm.fetchDoDetails(shipment)
+                                }
+                              }
+                            },
+                            [_vm._v("Delivery Items")]
+                          )
                         ])
                       ]),
                       _vm._v(" "),
@@ -44177,6 +44254,72 @@ var render = function() {
           ]
         )
       ]
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "modal fade",
+        attrs: {
+          id: "doDetailsModal",
+          tabindex: "-1",
+          role: "dialog",
+          "aria-labelledby": "exampleModalLabel",
+          "aria-hidden": "true",
+          "data-backdrop": "false"
+        }
+      },
+      [
+        _c(
+          "div",
+          { staticClass: "modal-dialog modal-lg", attrs: { role: "document" } },
+          [
+            _c("div", { staticClass: "modal-content" }, [
+              _vm._m(4),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "modal-body", staticStyle: { width: "100%" } },
+                [
+                  _c("div", { staticClass: "table-responsive" }, [
+                    _c(
+                      "table",
+                      { staticClass: "table align-items-center table-flush" },
+                      [
+                        _vm._m(5),
+                        _vm._v(" "),
+                        _vm.do_details
+                          ? _c(
+                              "tbody",
+                              _vm._l(_vm.do_details, function(detail, index) {
+                                return _c("tr", { key: index }, [
+                                  _c("td", [_vm._v(_vm._s(index + 1))]),
+                                  _vm._v(" "),
+                                  _c("td", [_vm._v(_vm._s(detail.qty))]),
+                                  _vm._v(" "),
+                                  _c("td", [_vm._v(_vm._s(detail.sales_unit))]),
+                                  _vm._v(" "),
+                                  _c("td", [_vm._v(_vm._s(detail.net_weight))]),
+                                  _vm._v(" "),
+                                  _c("td", [
+                                    _vm._v(_vm._s(detail.material_description))
+                                  ])
+                                ])
+                              }),
+                              0
+                            )
+                          : _c("tbody", [_vm._m(6)])
+                      ]
+                    )
+                  ])
+                ]
+              ),
+              _vm._v(" "),
+              _vm._m(7)
+            ])
+          ]
+        )
+      ]
     )
   ])
 }
@@ -44231,6 +44374,72 @@ var staticRenderFns = [
         },
         [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
       )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-footer" }, [
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-secondary",
+          attrs: { type: "button", "data-dismiss": "modal" }
+        },
+        [_vm._v("Close")]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-header" }, [
+      _c(
+        "h5",
+        { staticClass: "modal-title", attrs: { id: "exampleModalLabel" } },
+        [_vm._v("Delivery Items")]
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass: "close",
+          attrs: {
+            type: "button",
+            "data-dismiss": "modal",
+            "aria-label": "Close"
+          }
+        },
+        [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", { staticClass: "thead-light" }, [
+      _c("tr", [
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("#")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Quantity")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Unit")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Net Weight")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Item Description")])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("tr", [
+      _c("td", { attrs: { colspan: "5" } }, [_vm._v("Not available")])
     ])
   },
   function() {

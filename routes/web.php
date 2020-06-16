@@ -27,3 +27,5 @@ Route::post('/track-shipment-details-filter' , 'HomeController@shipmentDetailFil
 Route::get('/change_password','HomeController@change_password')->name('change_password');
 Route::post('/change-password','HomeController@changePassword');
 Route::get('/user-data','HomeController@authUserData');
+
+Route::post('/customer_do_details','HomeController@customerDODEtails');

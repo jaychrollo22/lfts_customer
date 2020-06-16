@@ -6,6 +6,7 @@ use App\ShipmentDetail;
 use App\ShipmentDetailLog;
 use App\CustomerShipmentDetail;
 use App\CustomerShipmentDetailLog;
+use App\CustomerDoDetail;
 
 use App\User;
 use App\Driver;
@@ -39,8 +40,9 @@ class HomeController extends Controller
     public function shipmentDetail(){
         $email = Auth::user()->email;
         
-        $shipment_details = CustomerShipmentDetail::where('email', $email)->whereDate('change_date', date('Y-m-d'))->orderBy('change_date' , 'DESC')->get();
+        $shipment_details = CustomerShipmentDetail::where('email', $email)->whereIn('status', ['In Plant','In Transit', 'Reach Destination'])->orderBy('updated_at' , 'DESC')->get();
         
+        $logs = [];
         if($shipment_details){
             foreach($shipment_details as $k => $log){
                 $driver = Driver::where('cardholder_id' , $log['CardholderID'])->first();
@@ -79,9 +81,9 @@ class HomeController extends Controller
         $to = $request->to ? $request->to : "";
     
         $shipment_details = CustomerShipmentDetail::where('email', $email)
-                                            ->where('change_date', '>=',  $from)
-                                            ->whereDate('change_date' ,'<=', $to)
-                                            ->orderBy('change_date','DESC')->get();
+                                            ->where('updated_at', '>=',  $from)
+                                            ->whereDate('updated_at' ,'<=', $to)
+                                            ->orderBy('updated_at','DESC')->get();
         $logs = [];
         if($shipment_details){
             foreach($shipment_details as $k => $log){
@@ -138,6 +140,17 @@ class HomeController extends Controller
         $user->save();
 
         return $user;
+    }
+
+    public function customerDODEtails(Request $request){
+        $data = $request->all();
+        $do_numbers = explode(',',$data['do_number']);
+        return $customer_do_details = CustomerDoDetail::whereIn('do_number',$do_numbers)
+                                                        ->where('shipment_number', $data['shipment_number'])
+                                                        ->where('customer_code', $data['customer_code'])
+                                                        ->where('qty','>',0)
+                                                        ->get();
+
     }
 
 }
