@@ -53,10 +53,10 @@
                                         <p>Customer Name: {{ shipment.customer_name }}</p>
                                         <p>Customer Address: {{ shipment.delivery_address }}</p>
                                         <p>
-                                            <button v-if="shipment.status =='In Transit'" class="btn btn-sm btn-warning mt-1" @click="fetchShipmentLogs(shipment.shipment_number)">{{ shipment.status }}</button>
-                                            <button v-else-if="shipment.status == 'Reach Destination'" class="btn btn-sm btn-success mt-1" @click="fetchShipmentLogs(shipment.shipment_number)">{{ shipment.status }}</button>
-                                            <button v-else-if="shipment.status == 'Delivered'" class="btn btn-sm btn-primary mt-1" @click="fetchShipmentLogs(shipment.shipment_number)">{{ shipment.status }}</button>
-                                            <button v-else-if="shipment.status == 'In Plant'" class="btn btn-sm btn-info mt-1" @click="fetchShipmentLogs(shipment.shipment_number)">{{ shipment.status }}</button>
+                                            <button v-if="shipment.status =='In Transit'" class="btn btn-sm btn-warning mt-1" @click="fetchShipmentLogs(shipment)">{{ shipment.status }}</button>
+                                            <button v-else-if="shipment.status == 'Reach Destination'" class="btn btn-sm btn-success mt-1" @click="fetchShipmentLogs(shipment)">{{ shipment.status }}</button>
+                                            <button v-else-if="shipment.status == 'Delivered'" class="btn btn-sm btn-primary mt-1" @click="fetchShipmentLogs(shipment)">{{ shipment.status }}</button>
+                                            <button v-else-if="shipment.status == 'In Plant'" class="btn btn-sm btn-info mt-1" @click="fetchShipmentLogs(shipment)">{{ shipment.status }}</button>
                                             <button v-else class="btn btn-sm btn-warning mt-1" disabled>No Status</button>
 
                                             <button class="btn btn-sm btn-default mt-1" v-if="shipment.status =='In Transit'" @click="checkMap(shipment.shipment_current_coordinates,shipment.shipment_delivery_coordinates)">Check Google Map</button>
@@ -245,12 +245,16 @@
                     v.shipments = response.data;
                 });
             },
-            fetchShipmentLogs(shipment_number){
+            fetchShipmentLogs(shipment_details){
                 $('#shipmentLogsModal').modal('show');
                 let v= this;
                 v.shipment_detail_logs = [];
                 v.shipment_logs_loading = true;
-                axios.get('/track-shipment-detail-log-data/' + shipment_number)
+                axios.post('/track-shipment-detail-log-data',{
+                    shipment_number:shipment_details.shipment_number,
+                    customer_code:shipment_details.customer_code,
+                     _method: 'POST'
+                })
                 .then(response => {
                     v.shipment_detail_logs = response.data;
                     v.shipment_logs_loading = false;

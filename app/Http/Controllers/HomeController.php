@@ -113,8 +113,14 @@ class HomeController extends Controller
     }
 
     //Get Shipment Detail Logs
-    public function getShipmentDetailLogs($shipment_number){
-        $shipment_detail_logs = CustomerShipmentDetailLog::where('shipment_number', '=', $shipment_number)->orderBy('created_at','DESC')->orderBy('log_date_time','DESC')->get();
+    public function getShipmentDetailLogs(Request $request){
+
+        $shipment_number = $request->shipment_number;
+        $customer_code = $request->customer_code;
+      
+        $shipment_detail_logs = CustomerShipmentDetailLog::where('shipment_number', '=', $shipment_number)
+                                                            ->where('customer_code', '=', $customer_code)
+                                                            ->orderBy('created_at','DESC')->orderBy('log_date_time','DESC')->get();
         return  $shipment_detail_logs;
     }
 
